@@ -9,15 +9,24 @@ import Foundation
 import SwiftUI
 
 struct AppRootView: View {
-    @State private var isReady = false
+    
+    @EnvironmentObject var appState: AppState
 
     var body: some View {
-        if isReady {
-            UsersView()
-        } else {
-            SplashView {
-                isReady = true
+        switch appState.phase {
+        case .loading:
+            SplashView()
+
+        case .ready(let users):
+            UsersView(users: users)
+
+        case .error(let message):
+            ErrorView(message: message) {
+                Task {
+                    await appState.bootstrap()
+                }
             }
         }
     }
 }
+

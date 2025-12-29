@@ -9,33 +9,30 @@ import Foundation
 import SwiftUI
 
 struct SplashView: View {
-    let onFinish: () -> Void
 
+    @EnvironmentObject var appState: AppState
     @State private var scale: CGFloat = 0.6
-    @State private var opacity: Double = 0.0
+    @State private var opacity = 0.0
 
     var body: some View {
         ZStack {
             Color.white.ignoresSafeArea()
 
-            VStack(spacing: 12) {
+            VStack(spacing: 16) {
                 Image("AppLogo")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 120, height: 120)
+                    .frame(width: 120)
                     .scaleEffect(scale)
                     .opacity(opacity)
 
                 ProgressView()
-                    .progressViewStyle(.circular)
-        
                     .opacity(opacity)
             }
         }
         .task {
             animate()
-            await preload()
-            onFinish()
+            await appState.bootstrap()
         }
     }
 
@@ -44,9 +41,5 @@ struct SplashView: View {
             scale = 1
             opacity = 1
         }
-    }
-
-    private func preload() async {
-        try? await Task.sleep(for: .seconds(1)) // simulate preload
     }
 }

@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct FlowerMarket_SwiftUI_MVVM_App: App {
-    var body: some Scene {
-        WindowGroup {
-            AppRootView()
+    
+
+        @StateObject private var appState = AppState()
+
+        var body: some Scene {
+            WindowGroup {
+                AppRootView()
+                    .environmentObject(appState)
+            }
         }
-    }
+
 }
