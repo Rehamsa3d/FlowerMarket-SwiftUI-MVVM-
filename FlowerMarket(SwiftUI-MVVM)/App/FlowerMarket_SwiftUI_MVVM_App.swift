@@ -11,7 +11,7 @@ import SwiftUI
 struct FlowerMarket_SwiftUI_MVVM_App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppRootView()
         }
     }
 }
