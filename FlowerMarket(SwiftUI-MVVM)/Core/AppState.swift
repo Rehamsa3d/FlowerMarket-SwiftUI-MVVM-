@@ -19,22 +19,12 @@ class AppState: ObservableObject {
 
     @Published var phase: Phase = .loading
 
-   // private let service: UserService
    private let service: ProductsService
 
     init(service: ProductsService = RemoteProductsService()) {
         self.service = service
     }
 
-//    func bootstrap() async {
-//        do {
-//            let users = try await service.fetchUsers()
-//            phase = .ready(users)
-//        } catch {
-//            phase = .error("Failed to load data")
-//        }
-//    }
-//    
     func bootstrap() async {
         do {
             let products = try await service.fetchProducts()
