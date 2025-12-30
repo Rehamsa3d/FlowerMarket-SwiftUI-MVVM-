@@ -17,8 +17,8 @@ struct AppRootView: View {
         case .loading:
             SplashView()
 
-        case .ready(let users):
-            UsersView(users: users)
+        case .ready(let products):
+            ProductsView(products: products)
 
         case .error(let message):
             ErrorView(message: message) {

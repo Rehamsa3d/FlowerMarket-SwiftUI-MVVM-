@@ -13,25 +13,36 @@ class AppState: ObservableObject {
     
     enum Phase {
         case loading
-        case ready([User])
+        case ready([Products])
         case error(String)
     }
 
     @Published var phase: Phase = .loading
 
-    private let service: UserService
+   // private let service: UserService
+   private let service: ProductsService
 
-    init(service: UserService = RemoteUserService()) {
+    init(service: ProductsService = RemoteProductsService()) {
         self.service = service
     }
 
+//    func bootstrap() async {
+//        do {
+//            let users = try await service.fetchUsers()
+//            phase = .ready(users)
+//        } catch {
+//            phase = .error("Failed to load data")
+//        }
+//    }
+//    
     func bootstrap() async {
         do {
-            let users = try await service.fetchUsers()
-            phase = .ready(users)
+            let products = try await service.fetchProducts()
+            phase = .ready(products)
         } catch {
             phase = .error("Failed to load data")
         }
     }
+
 }
 
