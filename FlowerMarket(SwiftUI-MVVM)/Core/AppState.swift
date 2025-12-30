@@ -9,30 +9,22 @@ import Foundation
 internal import Combine
 
 @MainActor
-class AppState: ObservableObject {
-    
+final class AppState: ObservableObject {
+
     enum Phase {
-        case loading
-        case ready([Products])
+        case launching
+        case home
         case error(String)
     }
 
-    @Published var phase: Phase = .loading
-
-   private let service: ProductsService
-
-    init(service: ProductsService = RemoteProductsService()) {
-        self.service = service
-    }
+    @Published var phase: Phase = .launching
 
     func bootstrap() async {
-        do {
-            let products = try await service.fetchProducts()
-            phase = .ready(products)
-        } catch {
-            phase = .error("Failed to load data")
-        }
+        // هنا ممكن تعمل:
+        // - check auth
+        // - check onboarding
+        // - preload tokens
+        try? await Task.sleep(nanoseconds: 1_500_000_000)
+        phase = .home
     }
-
 }
-

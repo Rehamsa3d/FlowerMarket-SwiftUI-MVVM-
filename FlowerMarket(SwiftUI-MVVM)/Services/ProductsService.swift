@@ -8,12 +8,12 @@
 import Foundation
 
 protocol ProductsService {
-    func fetchProducts() async throws -> [Products]
+    func fetchProducts() async throws -> [Product]
 }
 struct RemoteProductsService: ProductsService {
 
 
-    func fetchProducts() async throws -> [Products] {
+    func fetchProducts() async throws -> [Product] {
         let url = URL(string: "https://dummyjson.com/products")!
 
         let (data, response) = try await URLSession.shared.data(from: url)

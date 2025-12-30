@@ -9,24 +9,22 @@ import Foundation
 import SwiftUI
 
 struct AppRootView: View {
-    
-    @EnvironmentObject var appState: AppState
+
+    @StateObject private var appState = AppState()
 
     var body: some View {
         switch appState.phase {
-        case .loading:
+        case .launching:
             SplashView()
-
-        case .ready(let products):
-            ProductsView(products: products)
-
-        case .error(let message):
-            ErrorView(message: message) {
-                Task {
+                .task {
                     await appState.bootstrap()
                 }
-            }
+
+        case .home:
+            HomeView()
+
+        case .error(let message):
+            Text(message)
         }
     }
 }
-
