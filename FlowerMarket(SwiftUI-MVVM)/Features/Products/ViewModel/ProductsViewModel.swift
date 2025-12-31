@@ -9,10 +9,40 @@
 import Foundation
 internal import Combine
 
+//@MainActor
+//final class ProductsViewModel: ObservableObject {
+//
+//    @Published var products: [Product] = []
+//    @Published var isLoading = false
+//    @Published var errorMessage: String?
+//
+//    private let service: ProductsService
+//
+//    init(service: ProductsService = RemoteProductsService()) {
+//        self.service = service
+//    }
+//
+//    func loadProducts() async {
+//        isLoading = true
+//        errorMessage = nil
+//
+//        do {
+//            products = try await service.fetchProducts()
+//        } catch {
+//            errorMessage = "Failed to load products"
+//        }
+//
+//        isLoading = false
+//    }
+//}
+
+
 @MainActor
 final class ProductsViewModel: ObservableObject {
 
     @Published var products: [Product] = []
+    @Published var searchText: String = ""
+
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -20,6 +50,14 @@ final class ProductsViewModel: ObservableObject {
 
     init(service: ProductsService = RemoteProductsService()) {
         self.service = service
+    }
+
+    var filteredProducts: [Product] {
+        guard !searchText.isEmpty else { return products }
+
+        return products.filter {
+            $0.title.localizedCaseInsensitiveContains(searchText)
+        }
     }
 
     func loadProducts() async {
@@ -46,4 +84,3 @@ extension ProductsViewModel {
         productsByCategory.keys.sorted()
     }
 }
-

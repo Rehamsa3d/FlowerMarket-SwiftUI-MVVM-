@@ -30,5 +30,11 @@ struct ProductCardView: View {
                 .font(.footnote.bold())
         }
         .frame(width: 140)
+        
+            .padding()
+            .background(Color(.systemBackground))
+            .cornerRadius(16)
+            .shadow(color: .black.opacity(0.07), radius: 6, x: 0, y: 4)
+
     }
 }
