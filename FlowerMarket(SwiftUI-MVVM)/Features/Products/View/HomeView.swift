@@ -13,16 +13,8 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            SearchBar(text: $viewModel.searchText)
-                
-//            if viewModel.isLoading {
-//                ProgressView()
-//            } else {
-//                List(viewModel.filteredProducts) { product in
-//                    ProductCardView(product: product)
-//                }
-//                .listStyle(.plain)
-//            }
+         //   SearchBar(text: $viewModel.searchText)
+         
 
             ScrollView {
                     
@@ -41,7 +33,13 @@ struct HomeView: View {
                 .padding(.vertical)
             }
             .navigationTitle("Flower Market")
-        }
+            .searchable(
+                text: $viewModel.searchText,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: "Search flowers"
+            )
+            
+                    }
         .task {
             await viewModel.loadProducts()
         }
