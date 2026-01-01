@@ -9,7 +9,7 @@ import SwiftUI
 struct ProfileTab: View {
     var body: some View {
         NavigationStack {
-               // .navigationTitle("Profile")
+            ProfileView()
         }
     }
 }

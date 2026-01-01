@@ -22,6 +22,8 @@ struct SearchResultsView: View {
                 systemImage: "magnifyingglass",
                 description: Text("Try searching with a different keyword.")
             )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
         } else {
 
             // Flat results list
