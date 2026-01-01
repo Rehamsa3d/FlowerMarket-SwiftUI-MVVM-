@@ -15,8 +15,10 @@ struct CategorySectionView: View {
         VStack(alignment: .leading, spacing: 12) {
 
             HStack {
-                Text(category.capitalized)
-                    .font(.title3.bold())
+                Text(category)
+                       .font(.title3)
+                       .fontWeight(.semibold)
+
 
                 Spacer()
 
@@ -33,7 +35,7 @@ struct CategorySectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(products.prefix(5)) { product in
-                        ProductCardView(product: product)
+                        ProductCard(product: product)
                     }
                 }
                 .padding(.horizontal)

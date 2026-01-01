@@ -10,7 +10,7 @@ struct HomeBannerView: View {
     var body: some View {
         ZStack(alignment: .leading) {
             LinearGradient(
-                colors: [.blue, .purple],
+                colors: [.blue, .purple , .pink],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )

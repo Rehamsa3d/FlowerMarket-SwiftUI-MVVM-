@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-struct ProductCardView: View {
+struct ProductCard: View {
     let product: Product
 
     var body: some View {
@@ -18,23 +18,24 @@ struct ProductCardView: View {
             } placeholder: {
                 Color.gray.opacity(0.2)
             }
-            .frame(width: 140, height: 140)
+            .frame(width: 100, height: 100)
             .clipped()
             .cornerRadius(12)
 
             Text(product.title)
                 .font(.subheadline)
-                .lineLimit(2)
+                .fontWeight(.medium)
+                .lineLimit(1)
 
             Text("$\(product.price, specifier: "%.2f")")
-                .font(.footnote.bold())
+                .font(.subheadline)
+                .foregroundColor(.secondary)
         }
-        .frame(width: 140)
+        .frame(width: 120)
         
-            .padding()
-            .background(Color(.systemBackground))
-            .cornerRadius(16)
-            .shadow(color: .black.opacity(0.07), radius: 6, x: 0, y: 4)
-
+        .padding()
+        .background(.white)
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.06), radius: 8, y: 4)
     }
 }
