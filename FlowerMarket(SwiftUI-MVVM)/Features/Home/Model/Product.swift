@@ -14,6 +14,8 @@ struct Product: Identifiable, Decodable {
     let category: String
     let price: Double
     let thumbnail: String
+    let discountPercentage: Float? // nil = no offer
+
 }
 
 struct ProductsResponse: Decodable {

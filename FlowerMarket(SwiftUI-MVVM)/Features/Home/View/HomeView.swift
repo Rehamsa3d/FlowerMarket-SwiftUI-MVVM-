@@ -22,6 +22,7 @@ struct HomeView: View {
 
     /// Controls Cart presentation
     @State private var showCart = false
+    //@Binding var showTabBar: Bool
 
     var body: some View {
 
@@ -62,21 +63,36 @@ struct HomeView: View {
                     
                     // Category-based browsing UI
                     ForEach(viewModel.sortedCategories, id: \.self) { category in
+                        
                         if let products = viewModel.productsByCategory[category] {
-
+                            
+                            
                             CategorySectionView(
                                 category: category,
                                 products: products
                             )
                         }
+                        
                     }
 
                 } else {
 
-                    // Flat list of search results
-                    SearchResultsView(
-                        products: viewModel.filteredProducts
-                    )
+                    ForEach(viewModel.filteredProducts) { product in
+                        NavigationLink {
+                            ProductDetailsView(product: product)
+                        } label: {
+                            ProductRow(
+                                product: product,
+                                onFavorite: {
+                                    viewModel.toggleFavorite(product)
+                                },
+                                onAddToCart: {
+                                    viewModel.addToCart(product)
+                                }
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
             }
             .padding(.vertical)

@@ -1,29 +1,29 @@
 //
-//  FlowersViewModel.swift
+//  OffersViewModel.swift
 //  FlowerMarket(SwiftUI-MVVM)
 //
-//  Created by Reham on 30/12/2025.
+//  Created by Reham on 03/01/2026.
 //
 
 
 import Foundation
 internal import Combine
-@MainActor
-final class ProductsViewModel: ObservableObject {
 
-    // MARK: - Published State (UI)
+@MainActor
+final class OffersViewModel: ObservableObject {
+
+    // MARK: - UI State
     @Published var searchText: String = ""
     @Published var filteredProducts: [Product] = []
     @Published var isLoading: Bool = false
-
     @Published var errorMessage: String?
 
-    // MARK: - Private State
+    // MARK: - Data State
     @Published private(set) var allProducts: [Product] = []
     @Published private(set) var favorites: Set<Int> = []
     @Published private(set) var cart: [Product] = []
-    
-    
+
+    // MARK: - Dependencies
     private let service: ProductsService
     private var cancellables = Set<AnyCancellable>()
 
@@ -33,9 +33,10 @@ final class ProductsViewModel: ObservableObject {
         setupSearchDebounce()
     }
 
-    // MARK: - Public API
+    // MARK: - Data Loading
     func loadProducts() async {
         isLoading = true
+        errorMessage = nil
         defer { isLoading = false }
 
         do {
@@ -47,31 +48,6 @@ final class ProductsViewModel: ObservableObject {
         }
     }
 
-
-    // MARK: - Search Logic (Combine)
-    private func setupSearchDebounce() {
-        $searchText
-            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .removeDuplicates()
-            .sink { [weak self] text in
-                self?.filterProducts(with: text)
-            }
-            .store(in: &cancellables)
-    }
-
-    private func filterProducts(with text: String) {
-        guard !text.isEmpty else {
-            filteredProducts = allProducts
-            return
-        }
-
-        filteredProducts = allProducts.filter {
-            $0.title.localizedCaseInsensitiveContains(text)
-        }
-    }
-    
-    
     // MARK: - Favorites
     func toggleFavorite(_ product: Product) {
         if favorites.contains(product.id) {
@@ -98,7 +74,34 @@ final class ProductsViewModel: ObservableObject {
         print("Cart opened with \(cart.count) items")
     }
 }
-extension ProductsViewModel {
+
+private extension OffersViewModel {
+
+    func setupSearchDebounce() {
+        $searchText
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .removeDuplicates()
+            .sink { [weak self] text in
+                self?.filterProducts(with: text)
+            }
+            .store(in: &cancellables)
+    }
+
+    func filterProducts(with text: String) {
+        guard !text.isEmpty else {
+            filteredProducts = allProducts
+            return
+        }
+
+        filteredProducts = allProducts.filter {
+            $0.title.localizedCaseInsensitiveContains(text)
+        }
+    }
+}
+
+
+extension OffersViewModel {
 
     var productsByCategory: [String: [Product]] {
         Dictionary(grouping: filteredProducts, by: \.category)
@@ -108,4 +111,3 @@ extension ProductsViewModel {
         productsByCategory.keys.sorted()
     }
 }
-

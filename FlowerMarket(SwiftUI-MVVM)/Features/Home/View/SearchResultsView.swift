@@ -12,6 +12,8 @@ import SwiftUI
 struct SearchResultsView: View {
 
     let products: [Product]
+    let onFavorite: (Product) -> Void
+    let onAddToCart: (Product) -> Void
 
     var body: some View {
 
@@ -29,10 +31,21 @@ struct SearchResultsView: View {
             // Flat results list
             LazyVStack(spacing: 16) {
                 ForEach(products) { product in
-                    ProductRow(product: product)
+                    //ProductRow(product: product)
+                    ProductRow(
+                        product: product,
+                        onFavorite: {
+                            onFavorite(product)
+                        },
+                        onAddToCart: {
+                            onAddToCart(product)
+                        }
+                    )
+
                 }
             }
             .padding(.horizontal)
         }
+        
     }
 }

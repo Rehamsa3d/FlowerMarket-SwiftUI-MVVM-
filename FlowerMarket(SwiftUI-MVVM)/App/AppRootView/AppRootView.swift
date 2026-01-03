@@ -21,7 +21,7 @@ struct AppRootView: View {
                 }
 
         case .home:
-            RootView()
+            MainTabView()
         case .error(let message):
             Text(message)
         }

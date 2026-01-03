@@ -37,5 +37,13 @@ struct ProductCard: View {
         .background(.white)
         .cornerRadius(16)
         .shadow(color: .black.opacity(0.06), radius: 8, y: 4)
+        
+//        NavigationLink {
+//            ProductDetailsView(product: product)
+//        } label: {
+//            ProductRow(product: product)
+//        }
+//        .buttonStyle(.plain)
+
     }
 }

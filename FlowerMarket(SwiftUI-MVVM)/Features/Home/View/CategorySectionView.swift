@@ -10,6 +10,7 @@ import SwiftUI
 struct CategorySectionView: View {
     let category: String
     let products: [Product]
+    //@Binding var showTabBar: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -35,7 +36,15 @@ struct CategorySectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(products.prefix(5)) { product in
-                        ProductCard(product: product)
+                        
+                        NavigationLink {
+                            ProductDetailsView(product: product)
+                        }
+                        label: {
+                            ProductCard(product: product)
+
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal)

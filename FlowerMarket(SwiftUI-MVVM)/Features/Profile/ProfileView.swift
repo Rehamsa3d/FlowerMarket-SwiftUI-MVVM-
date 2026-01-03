@@ -10,8 +10,11 @@ import SwiftUI
 
 struct ProfileView: View {
 
+   // @Binding var showTabBar: Bool
+
     var body: some View {
 
+        
         ScrollView {
 
             VStack(spacing: 24) {
@@ -71,6 +74,7 @@ struct ProfileView: View {
                 }
                 .padding(.top, 16)
             }
+
             .padding(.horizontal)
         }
     }
