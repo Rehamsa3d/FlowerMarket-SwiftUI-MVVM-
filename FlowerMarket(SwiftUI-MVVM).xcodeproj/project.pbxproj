@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4DA771B32F0C662D00B653E3 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4DA771B12F0C662100B653E3 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		4D1746942F031F0300BC206A /* FlowerMarket(SwiftUI-MVVM).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlowerMarket(SwiftUI-MVVM).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4DA771B12F0C662100B653E3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +37,7 @@
 		4D17468B2F031F0300BC206A = {
 			isa = PBXGroup;
 			children = (
+				4DA771B12F0C662100B653E3 /* README.md */,
 				4D1746962F031F0300BC206A /* FlowerMarket(SwiftUI-MVVM) */,
 				4D1746952F031F0300BC206A /* Products */,
 			);
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DA771B32F0C662D00B653E3 /* README.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
