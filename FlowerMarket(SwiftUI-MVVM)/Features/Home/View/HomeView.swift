@@ -14,111 +14,118 @@
 ///
 ///
 import SwiftUI
+import SwiftUI
 
 struct HomeView: View {
-
-    /// Owns the ProductsViewModel lifecycle for this screen
     @StateObject private var viewModel = ProductsViewModel()
-
-    /// Controls Cart presentation
     @State private var showCart = false
-    //@Binding var showTabBar: Bool
 
     var body: some View {
+        VStack(spacing: 0) {
+            // MARK: - Custom Header
+            headerView
+            
+            ScrollView {
+                LazyVStack(spacing: 24) {
+                    
+                    if viewModel.searchText.isEmpty {
+                        // MARK: - Default Home Content
+                        HomeBannerView()
+                        
+                        if viewModel.isLoading {
+                            // عرض الـ Skeleton أثناء التحميل
+                            loadingSkeletonState
+                        } else {
+                            // عرض المحتوى الفعلي مقسم حسب التصنيفات
+                            categoriesSections
+                        }
+                        
+                    } else {
+                        // MARK: - Search Results
+                        searchResultsList
+                    }
+                }
+                .padding(.vertical)
+            }
+        }
+        .task {
+            await viewModel.loadProducts()
+        }
+        .sheet(isPresented: $showCart) {
+             CartView()
+        }
+    }
+}
 
+// MARK: - View Components
+extension HomeView {
+    
+    private var headerView: some View {
         VStack(alignment: .leading, spacing: 12) {
-
             HStack {
-                // MARK: - Navigation
-                Text("hello")
-                    .font(.title.bold())
-
+                Text("Flower Market")
+                    .font(.system(.title, design: .serif).bold())
+                
                 Spacer()
                 
-                // MARK: - Toolbar
                 Button {
                     showCart = true
                 } label: {
                     Image(systemName: "cart")
+                        .font(.title3)
+                        .padding(8)
+                        .background(Color.blue.opacity(0.1))
+                        .clipShape(Circle())
                 }
-
             }
-
-            // Search
+            
             SearchBar(text: $viewModel.searchText)
         }
-        .padding(.horizontal)
-
-        // Scrollable content container
-        ScrollView {
-            // Lazy stack for better performance with large lists
-            LazyVStack(spacing: 24) {
-
-                // MARK: - Conditional Content
-                // Show categories when not searching
-                if viewModel.searchText.isEmpty {
-
-                    // Top promotional banner
-                    HomeBannerView()
-                    
-                    // Category-based browsing UI
-                    ForEach(viewModel.sortedCategories, id: \.self) { category in
-                        
-                        if let products = viewModel.productsByCategory[category] {
-                            
-                            
-                            CategorySectionView(
-                                category: category,
-                                products: products
-                            )
-                        }
-                        
-                    }
-
-                } else {
-
-                    ForEach(viewModel.filteredProducts) { product in
-                        NavigationLink {
-                            ProductDetailsView(product: product)
-                        } label: {
-                            ProductRow(
-                                product: product,
-                                onFavorite: {
-                                    viewModel.toggleFavorite(product)
-                                },
-                                onAddToCart: {
-                                    viewModel.addToCart(product)
-                                }
-                            )
-                        }
-                        .buttonStyle(.plain)
+        .padding()
+    }
+    
+    private var loadingSkeletonState: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Loading Flowers...")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(.horizontal)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(0..<5) { _ in
+                        ProductCardSkeleton()
                     }
                 }
+                .padding(.horizontal)
             }
-            .padding(.vertical)
         }
-
-        // MARK: - Navigation
-      //  .navigationTitle("Flower Market")
-
-//        // Native iOS search experience
-//        .searchable(
-//            text: $viewModel.searchText,
-//            placement: .navigationBarDrawer(displayMode: .always),
-//            prompt: "Search flowers"
-//        )
-
-
-        // MARK: - Cart Presentation
-        // Presented as a sheet for fast access and dismissal
-//        .sheet(isPresented: $showCart) {
-//           // CartView()
-//        }
-
-        // MARK: - Data Loading
-        // Loads products once when the view appears
-        .task {
-            await viewModel.loadProducts()
+    }
+    
+    private var categoriesSections: some View {
+        ForEach(viewModel.sortedCategories, id: \.self) { category in
+            if let products = viewModel.productsByCategory[category] {
+                CategorySectionView(
+                    category: category,
+                    products: products
+                )
+            }
+        }
+    }
+    
+    private var searchResultsList: some View {
+        ForEach(viewModel.filteredProducts) { product in
+            NavigationLink {
+                ProductDetailsView(product: product)
+            } label: {
+                ProductRow(
+                    product: product,
+                    onFavorite: { viewModel.toggleFavorite(product) },
+                    onAddToCart: { viewModel.addToCart(product) }
+                )
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal)
         }
     }
 }

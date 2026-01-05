@@ -11,12 +11,16 @@ import SwiftUI
 struct FlowerMarket_SwiftUI_MVVM_App: App {
     
 
-        @StateObject private var appState = AppState()
-
+        
+    @StateObject private var appState = AppState()
+    
+    @StateObject var cartManager = CartManager()
+    
         var body: some Scene {
             WindowGroup {
                 AppRootView()
                     .environmentObject(appState)
+                    .environmentObject(cartManager) // كدا كل الشاشات تقدر تستخدمه
             }
         }
 
