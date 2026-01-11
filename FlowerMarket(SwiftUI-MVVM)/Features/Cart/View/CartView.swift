@@ -21,7 +21,7 @@ struct CartView: View {
                         ForEach(cartManager.cartItems) { item in
                             CartItemRow(item: item)
                         }
-                        .onDelete(perform: cartManager.removeFromCart) // إضافة ميزة المسح بالسحب
+                        .onDelete(perform: cartManager.removeFromCart) 
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                     }
@@ -75,3 +75,8 @@ private extension CartView {
         }
     }
 }
+
+
+//#Preview {
+//    CartView()
+//}

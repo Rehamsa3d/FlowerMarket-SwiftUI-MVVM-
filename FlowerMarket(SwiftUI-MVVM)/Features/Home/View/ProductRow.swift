@@ -10,6 +10,8 @@ struct ProductRow: View {
     let product: Product
     var onFavorite: () -> Void
     var onAddToCart: () -> Void
+    var isFavorite:Bool
+    
     
     var body: some View {
         HStack(spacing: 16) {
@@ -21,7 +23,7 @@ struct ProductRow: View {
                     Color.gray.opacity(0.1)
                 }
                 .frame(width: 100, height: 100)
-                .clipShape(RoundedRectangle(cornerRadius: 20)) // شكل أنعم
+                .clipShape(RoundedRectangle(cornerRadius: 20)) 
                 
                 if let discount = product.discountPercentage, discount > 0 {
                     Text("\(Int(discount))% OFF")
@@ -43,12 +45,11 @@ struct ProductRow: View {
                 
                 priceView
                 
-                // إضافة تقييم بسيط بيفرق جداً في شكل الـ UI
                 HStack(spacing: 2) {
                     Image(systemName: "star.fill")
                         .font(.caption2)
                         .foregroundColor(.orange)
-                    Text("4.8") // يمكن استبدالها ببيانات حقيقية
+                    Text("4.8")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }
@@ -59,8 +60,8 @@ struct ProductRow: View {
             // 3. Actions
             VStack(spacing: 15) {
                 Button(action: onFavorite) {
-                    Image(systemName: "heart.fill")
-                        .font(.system(size: 18))
+                    Image(systemName: isFavorite ? "heart.fill" : "heart")
+                                    .foregroundColor(isFavorite ? .red : .gray)
                         .foregroundColor(.red.opacity(0.8))
                 }
                 
@@ -75,7 +76,7 @@ struct ProductRow: View {
         .background(Color.white)
         .cornerRadius(24)
         .shadow(color: Color.black.opacity(0.04), radius: 10, x: 0, y: 4)
-        .padding(.horizontal) // عشان ميبقاش لازق في حواف الشاشة
+        .padding(.horizontal)
     }
     
     private var priceView: some View {

@@ -15,6 +15,7 @@ struct Product: Identifiable, Decodable {
     let price: Double
     let thumbnail: String
     let discountPercentage: Float? // nil = no offer
+    var isFavorite:Bool? = nil
 
 }
 

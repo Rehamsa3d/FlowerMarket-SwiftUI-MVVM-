@@ -85,18 +85,6 @@ final class ProductsViewModel: ObservableObject {
         favorites.contains(product.id)
     }
 
-    // MARK: - Cart
-    func addToCart(_ product: Product) {
-        cart.append(product)
-    }
-
-    func cartCount() -> Int {
-        cart.count
-    }
-
-    func openCart() {
-        print("Cart opened with \(cart.count) items")
-    }
 }
 extension ProductsViewModel {
 

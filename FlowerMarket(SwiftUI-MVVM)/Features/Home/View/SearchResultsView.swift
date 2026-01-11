@@ -14,7 +14,8 @@ struct SearchResultsView: View {
     let products: [Product]
     let onFavorite: (Product) -> Void
     let onAddToCart: (Product) -> Void
-
+    let isFavorite: Bool
+    
     var body: some View {
 
         // Empty state
@@ -39,7 +40,7 @@ struct SearchResultsView: View {
                         },
                         onAddToCart: {
                             onAddToCart(product)
-                        }
+                        }, isFavorite: isFavorite
                     )
 
                 }

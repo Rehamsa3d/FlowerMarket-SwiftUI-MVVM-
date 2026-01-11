@@ -20,7 +20,6 @@ final class AppState: ObservableObject {
     @Published var phase: Phase = .launching
 
     func bootstrap() async {
-        // هنا ممكن تعمل:
         // - check auth
         // - check onboarding
         // - preload tokens

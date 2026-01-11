@@ -8,132 +8,6 @@
 
 import SwiftUI
 
-//
-//struct ProductDetailsView: View {
-//    
-//    //@Binding var showTabBar: Bool
-//
-//    let product: Product
-//    @State private var quantity: Int = 1
-//
-//    var body: some View {
-//        ScrollView {
-//            VStack(alignment: .leading, spacing: 24) {
-//
-//                productImage
-//                productInfo
-//                quantitySelector
-//
-//                // Extra space so content never hides behind button
-//                Color.clear
-//                    .frame(height: 20)
-//            }
-//            .padding()
-//        }
-//        .safeAreaInset(edge: .bottom) {
-//            addToCartButton
-//        }
-//        .navigationTitle("Details")
-//
-//        .navigationBarTitleDisplayMode(.inline)
-//        .toolbar(.hidden, for: .tabBar)
-//    }
-//}
-//
-//private extension ProductDetailsView {
-//    var productImage: some View {
-//        ZStack(alignment: .topLeading) {
-//
-//            AsyncImage(url: URL(string: product.thumbnail)) { image in
-//                image
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(maxWidth: .infinity)
-//            } placeholder: {
-//                Color.gray.opacity(0.2)
-//                    .frame(height: 280)
-//            }
-//
-//            if let discount = product.discountPercentage {
-//                OfferBadge(discount: discount)
-//                    .padding()
-//            }
-//        }
-//        .cornerRadius(16)
-//    }
-//}
-//
-//private extension ProductDetailsView {
-//    var productInfo: some View {
-//        VStack(alignment: .leading, spacing: 12) {
-//
-//            Text(product.title)
-//                .font(.title2.bold())
-//
-//            priceView
-//
-//            Text(product.description ?? "No description available.")
-//                .font(.body)
-//                .foregroundColor(.secondary)
-//        }
-//    }
-//}
-//
-//private extension ProductDetailsView {
-//    var quantitySelector: some View {
-//        HStack(spacing: 16) {
-//
-//            Text("Quantity")
-//                .font(.headline)
-//
-//            Spacer()
-//
-//            Stepper(value: $quantity, in: 1...10) {
-//                Text("\(quantity)")
-//                    .font(.headline)
-//            }
-//        }
-//    }
-//}
-//private extension ProductDetailsView {
-//    var addToCartButton: some View {
-//        Button {
-//            addToCart()
-//        } label: {
-//            Text("Add to Cart")
-//                .font(.headline)
-//                .foregroundColor(.white)
-//                .frame(maxWidth: .infinity)
-//                .padding()
-//                .background(Color.blue)
-//                .cornerRadius(16)
-//        }
-//        .padding()
-//       // .background(.ultraThinMaterial)
-//    }
-//}
-//
-//private extension ProductDetailsView {
-//    var priceView: some View {
-//        Group {
-//            if let discount = product.discountPercentage {
-//                HStack(spacing: 8) {
-//                    Text("$\(product.price)")
-//                        .strikethrough()
-//                        .foregroundColor(.secondary)
-//
-//                    Text(discountedPrice)
-//                        .font(.title3.bold())
-//                        .foregroundColor(.red)
-//                }
-//            } else {
-//                Text("$\(product.price)")
-//                    .font(.title3.bold())
-//            }
-//        }
-//    }
-//}
-//
 import SwiftUI
 
 struct ProductDetailsView: View {
@@ -141,9 +15,15 @@ struct ProductDetailsView: View {
     let product: Product
     @State private var quantity: Int = 1
     @Environment(\.dismiss) var dismiss
-    // نستخدم EnvironmentObject عشان نوصل لنفس نسخة السلة في كل التطبيق
-    @EnvironmentObject var cartManager: CartManager
 
+    @EnvironmentObject var cartManager: CartManager
+    @EnvironmentObject var favorites: FavoritesManager
+    var isFavorite:Bool
+
+//    var onFavorite: () -> Void
+//    var onAddToCart: () -> Void
+//    var isFavorite:Bool
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 0) {
@@ -223,9 +103,10 @@ private extension ProductDetailsView {
             }
             
             // Floating Favorite Button
-            Button(action: {}) {
-                Image(systemName: "heart.fill")
-                    .foregroundColor(.red)
+            Button(action: addToFavorite) {
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                                .foregroundColor(isFavorite ? .red : .gray)
+                    .foregroundColor(.red.opacity(0.8))
                     .padding()
                     .background(.white)
                     .clipShape(Circle())
@@ -317,17 +198,6 @@ struct CustomCorner: Shape {
         return Path(path.cgPath)
     }
 }
-//private extension ProductDetailsView {
-//    var discountedPrice: String {
-//        let discounted = product.price * (1 - Double(product.discountPercentage ?? 0) / 100)
-//        return String(format: "$%.2f", discounted)
-//    }
-//
-//    func addToCart() {
-//        // Hook into ViewModel later
-//        print("Added \(quantity) item(s) to cart")
-//    }
-//}
 private extension ProductDetailsView {
 
     var discountedPriceValue: Double {
@@ -344,7 +214,7 @@ private extension ProductDetailsView {
     }
 
     func addToCart() {
-        // الربط الحقيقي مع الـ Manager
+
         cartManager.addToCart(product: product, quantity: quantity)
         
         // لمسة UI: اهتزاز بسيط (Haptic Feedback) عند الإضافة
@@ -352,5 +222,10 @@ private extension ProductDetailsView {
         generator.impactOccurred()
         
         print("Cart updated: \(cartManager.cartItems.count) items total")
+    }
+    
+    func addToFavorite() {
+        favorites.toggleFavorite(productID: product.id)
+       
     }
 }

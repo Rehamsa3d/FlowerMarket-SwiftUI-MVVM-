@@ -32,7 +32,6 @@ struct CartItemRow: View {
             
             Spacer()
             
-            // أزرار التحكم في الكمية داخل السلة
             HStack(spacing: 10) {
                 Button { cartManager.updateQuantity(for: item, delta: -1) } label: {
                     Image(systemName: "minus.square").foregroundColor(.secondary)

@@ -19,6 +19,10 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel = ProductsViewModel()
     @State private var showCart = false
+    @State private var quantity: Int = 1
+
+    @EnvironmentObject var cartManager: CartManager
+    @EnvironmentObject var favorites: FavoritesManager
 
     var body: some View {
         VStack(spacing: 0) {
@@ -33,10 +37,8 @@ struct HomeView: View {
                         HomeBannerView()
                         
                         if viewModel.isLoading {
-                            // عرض الـ Skeleton أثناء التحميل
                             loadingSkeletonState
                         } else {
-                            // عرض المحتوى الفعلي مقسم حسب التصنيفات
                             categoriesSections
                         }
                         
@@ -77,6 +79,17 @@ extension HomeView {
                         .background(Color.blue.opacity(0.1))
                         .clipShape(Circle())
                 }
+                if cartManager.cartItems.count > 0 {
+                                    Text("\(cartManager.cartItems.count)")
+                                        .font(.caption2.bold())
+                                        .foregroundColor(.white)
+                                        .frame(width: 18, height: 18)
+                                        .background(Color.red)
+                                        .clipShape(Circle())
+                                        // Offset to sit on the "shoulder" of the icon
+                                        .offset(x: 5, y: -5)
+                                        .transition(.scale) // Cool pop-in effect
+                                }
             }
             
             SearchBar(text: $viewModel.searchText)
@@ -116,12 +129,16 @@ extension HomeView {
     private var searchResultsList: some View {
         ForEach(viewModel.filteredProducts) { product in
             NavigationLink {
-                ProductDetailsView(product: product)
+                ProductDetailsView(product: product, isFavorite: favorites.favoriteIDs.contains(product.id))
             } label: {
                 ProductRow(
                     product: product,
-                    onFavorite: { viewModel.toggleFavorite(product) },
-                    onAddToCart: { viewModel.addToCart(product) }
+                    onFavorite: {
+                        favorites.toggleFavorite(productID: product.id)
+                    },
+                    onAddToCart: {
+                        cartManager.addToCart(product: product, quantity: quantity)
+                    }, isFavorite: favorites.favoriteIDs.contains(product.id)
                 )
             }
             .buttonStyle(.plain)

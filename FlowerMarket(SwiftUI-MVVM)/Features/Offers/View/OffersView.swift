@@ -12,8 +12,11 @@ import SwiftUI
 struct OffersView: View {
 
     @StateObject private var viewModel = OffersViewModel()
-    //@Binding var showTabBar: Bool
-
+    @State private var showCart = false
+    @State private var quantity: Int = 1
+    @EnvironmentObject var cartManager: CartManager
+    @EnvironmentObject var favorites: FavoritesManager
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -34,6 +37,9 @@ struct OffersView: View {
             .task {
                 await viewModel.loadProducts()
             }
+            .sheet(isPresented: $showCart) {
+                 CartView()
+            }
             
         }
  
@@ -53,7 +59,7 @@ private extension OffersView {
             Spacer()
 
             Button {
-                viewModel.openCart()
+                showCart = true
             } label: {
                 Image(systemName: "cart")
                     .font(.title3)
@@ -95,16 +101,17 @@ private extension OffersView {
         LazyVStack(spacing: 16) {
             ForEach(viewModel.filteredProducts) { product in
                 NavigationLink {
-                    ProductDetailsView(product: product)
+                    ProductDetailsView(product: product, isFavorite: favorites.favoriteIDs.contains(product.id))
                 } label: {
                     ProductRow(
                         product: product,
                         onFavorite: {
-                            viewModel.toggleFavorite(product)
+                            favorites.toggleFavorite(productID: product.id)
                         },
                         onAddToCart: {
-                            viewModel.addToCart(product)
-                        }
+                            cartManager.addToCart(product: product, quantity: quantity)
+
+                        }, isFavorite: favorites.favoriteIDs.contains(product.id)
                     )
                 }
                 .buttonStyle(.plain)

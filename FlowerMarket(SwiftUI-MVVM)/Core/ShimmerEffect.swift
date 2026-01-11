@@ -24,7 +24,7 @@ struct ShimmerEffect: ViewModifier {
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
-                    .scaleEffect(3) // تكبير عشان يغطي المساحة
+                    .scaleEffect(3)
                     .offset(x: -geo.size.width + (phase * geo.size.width * 2))
                 }
             )
